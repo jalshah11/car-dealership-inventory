@@ -48,3 +48,9 @@ export const searchVehicleSchema = z.object({
 });
 
 export type SearchVehicleInput = z.infer<typeof searchVehicleSchema>;
+
+export const restockSchema = z.object({
+  amount: z.number().int('Amount must be a whole number').positive('Amount must be greater than 0'),
+});
+
+export type RestockInput = z.infer<typeof restockSchema>;

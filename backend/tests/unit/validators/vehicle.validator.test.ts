@@ -1,4 +1,9 @@
-import { createVehicleSchema, updateVehicleSchema, searchVehicleSchema } from '@validators/vehicle.validator';
+import {
+  createVehicleSchema,
+  updateVehicleSchema,
+  searchVehicleSchema,
+  restockSchema,
+} from '@validators/vehicle.validator';
 
 describe('createVehicleSchema', () => {
   const valid = {
@@ -89,5 +94,23 @@ describe('searchVehicleSchema', () => {
 
   it('rejects a non-numeric minPrice', () => {
     expect(searchVehicleSchema.safeParse({ minPrice: 'not-a-number' }).success).toBe(false);
+  });
+});
+
+describe('restockSchema', () => {
+  it('accepts a positive integer amount', () => {
+    expect(restockSchema.safeParse({ amount: 10 }).success).toBe(true);
+  });
+
+  it('rejects zero', () => {
+    expect(restockSchema.safeParse({ amount: 0 }).success).toBe(false);
+  });
+
+  it('rejects a negative amount', () => {
+    expect(restockSchema.safeParse({ amount: -5 }).success).toBe(false);
+  });
+
+  it('rejects a non-integer amount', () => {
+    expect(restockSchema.safeParse({ amount: 2.5 }).success).toBe(false);
   });
 });

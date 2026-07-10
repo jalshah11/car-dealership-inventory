@@ -32,3 +32,33 @@ export function validateBody(schema: ZodSchema) {
     next();
   };
 }
+
+// A validated-query counterpart to validateBody -- but NOT simply
+// `req.query = result.data`.
+//
+// WHY NOT: in Express 5 (unlike Express 4), `req.query` is defined as a
+// GETTER ONLY (no setter) on the request prototype. Assigning to it isn't
+// a TypeError -- Node's non-strict-mode semantics mean the assignment is
+// silently swallowed, and req.query keeps its original, un-coerced value.
+// That's a genuinely nasty bug shape: no error, no crash, just quietly
+// wrong data (e.g. minPrice staying the STRING "20000" instead of the
+// NUMBER 20000 our search logic expects). We sidestep it entirely by
+// attaching the validated/coerced result to its own property instead,
+// exactly the same pattern we already use for req.user in
+// auth.middleware.ts (see src/types/express.d.ts for the augmentation).
+export function validateQuery(schema: ZodSchema) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const result = schema.safeParse(req.query);
+
+    if (!result.success) {
+      res.status(400).json({
+        error: 'Validation failed',
+        details: result.error.flatten().fieldErrors,
+      });
+      return;
+    }
+
+    req.validatedQuery = result.data;
+    next();
+  };
+}

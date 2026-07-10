@@ -15,6 +15,7 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import authRoutes from '@routes/auth.routes';
+import vehicleRoutes from '@routes/vehicle.routes';
 import { errorHandler } from '@middleware/error.middleware';
 
 export function createApp(): Express {
@@ -47,7 +48,7 @@ export function createApp(): Express {
 
   // --- Feature routes -----------------------------------------------
   app.use('/api/auth', authRoutes);
-  // app.use('/api/vehicles', vehicleRoutes); // added in the next session
+  app.use('/api/vehicles', vehicleRoutes);
 
   // --- 404 handler --------------------------------------------------
   // Must be registered AFTER all real routes -- Express matches routes in
