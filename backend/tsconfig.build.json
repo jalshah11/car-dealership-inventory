@@ -1,0 +1,11 @@
+{
+  // Used ONLY by `npm run build`. Extends the base config but restricts
+  // compilation to src/ -- we never want test files bundled into dist/,
+  // shipped to production, or imported at runtime.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests"]
+}

@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    /* Project layout */
+    "outDir": "dist",
+
+    /* Module system: Node.js still runs CommonJS by default in most prod setups */
+    "module": "commonjs",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "moduleResolution": "node",
+
+    /* Strictness: we want the compiler to catch bugs, not paper over them */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Interop & DX */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    /* Debugging */
+    "sourceMap": true,
+
+    /* Path aliases -> keeps imports clean as the project grows (e.g. "@services/vehicle.service") */
+    "baseUrl": "./src",
+    "paths": {
+      "@config/*": ["config/*"],
+      "@controllers/*": ["controllers/*"],
+      "@services/*": ["services/*"],
+      "@repositories/*": ["repositories/*"],
+      "@dtos/*": ["dtos/*"],
+      "@middleware/*": ["middleware/*"],
+      "@routes/*": ["routes/*"],
+      "@models/*": ["models/*"],
+      "@validators/*": ["validators/*"],
+      "@utils/*": ["utils/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
