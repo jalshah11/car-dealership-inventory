@@ -42,6 +42,6 @@
       "@utils/*": ["utils/*"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "prisma/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
