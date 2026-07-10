@@ -16,11 +16,22 @@ export class AppError extends Error {
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
-    this.name = 'AppError';
+    // this.constructor.name resolves to whichever subclass was actually
+    // instantiated (e.g. "NotFoundError", "ConflictError") rather than
+    // always "AppError" -- useful in logs to see exactly what kind of
+    // error occurred without inspecting the message string.
+    this.name = this.constructor.name;
 
-    // Restores correct prototype chain when compiling to ES2020/CommonJS,
-    // so `err instanceof AppError` works reliably.
-    Object.setPrototypeOf(this, AppError.prototype);
+    // NOTE: we deliberately do NOT call Object.setPrototypeOf(this, ...)
+    // here. That pattern exists to fix `instanceof` checks when
+    // TypeScript downlevels `class` syntax to ES5 (which doesn't support
+    // extending built-ins like Error correctly). Our tsconfig targets
+    // ES2020, where native class extension works correctly out of the
+    // box -- adding setPrototypeOf here would instead BREAK it, by
+    // resetting every subclass instance's prototype back to AppError's
+    // own prototype, making `instanceof NotFoundError` etc. always false.
+    // (We know this because it happened -- see the vehicle.service tests
+    // that caught it.)
   }
 }
 
@@ -51,5 +62,11 @@ export class NotFoundError extends AppError {
 export class BadRequestError extends AppError {
   constructor(message: string) {
     super(message, 400);
+  }
+}
+
+export class OutOfStockError extends AppError {
+  constructor(message: string) {
+    super(message, 409);
   }
 }
