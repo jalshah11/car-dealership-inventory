@@ -1,0 +1,99 @@
+// Prisma schema for the Car Dealership Inventory System.
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// ENUM: Role
+// Why an enum instead of a free-text string? It constrains valid values at
+// the DATABASE level, not just in application code. Even if a bug in our
+// service layer tried to insert role = "superadmin", Postgres would reject
+// it. This is "defense in depth" — validation at multiple layers.
+// ---------------------------------------------------------------------------
+enum Role {
+  USER
+  ADMIN
+}
+
+// ---------------------------------------------------------------------------
+// MODEL: User
+// ---------------------------------------------------------------------------
+model User {
+  id        String   @id @default(uuid())
+  // Why UUID instead of auto-increment int? UUIDs don't leak information
+  // (an incrementing id lets an attacker guess "how many users exist" or
+  // enumerate /api/users/1, /api/users/2...). UUIDs also make it trivial to
+  // merge data across databases later (no id collisions).
+
+  email     String   @unique
+  // @unique creates a database-level constraint AND an index, so lookups by
+  // email (used constantly at login) are fast, and duplicate registrations
+  // are impossible even under race conditions -- something a purely
+  // application-level check (findFirst then create) can't fully guarantee.
+
+  password  String
+  // We NEVER store plaintext passwords. This column stores a bcrypt HASH,
+  // produced in the service layer before the row is ever written.
+
+  name      String
+  role      Role     @default(USER)
+  // New users default to USER. Nobody can register themselves as ADMIN
+  // through the public API -- admin accounts are provisioned deliberately
+  // (e.g. seeded, or promoted by an existing admin). We'll enforce this in
+  // the service layer, not just rely on the default.
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+  // @@map lets the Prisma model be PascalCase (User) while the actual SQL
+  // table is snake_case (users) -- a common convention split between
+  // application code style and SQL style.
+}
+
+// ---------------------------------------------------------------------------
+// MODEL: Vehicle
+// ---------------------------------------------------------------------------
+model Vehicle {
+  id        String   @id @default(uuid())
+  make      String
+  model     String
+  category  String
+  // Stored as a plain string for now (e.g. "Sedan", "SUV", "Truck"). We could
+  // normalize this into its own Category table with a foreign key, but that's
+  // premature for our current requirements (no category-specific attributes
+  // yet). We'll call this out explicitly as a trade-off: simplicity now vs.
+  // referential integrity + easier renaming later. Easy to migrate to a
+  // relation afterward if requirements grow.
+
+  price     Decimal  @db.Decimal(10, 2)
+  // Decimal, NOT Float. Floats use binary floating point and can introduce
+  // rounding errors on money (classic interview gotcha: 0.1 + 0.2 !== 0.3).
+  // Decimal(10,2) gives us up to 8 digits before the decimal point and
+  // exactly 2 after -- appropriate for currency.
+
+  quantity  Int      @default(0)
+  // Quantity in stock. Must never go negative -- enforced in the SERVICE
+  // layer (application logic), because Postgres CHECK constraints add
+  // complexity Prisma doesn't manage as elegantly; we'll discuss this
+  // trade-off when we implement the purchase endpoint.
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Indexes to make our search endpoint fast. Without these, filtering by
+  // make/model/category/price would force Postgres to scan every row
+  // (a "sequential scan") once the table grows.
+  @@index([make])
+  @@index([model])
+  @@index([category])
+  @@index([price])
+  @@map("vehicles")
+}
