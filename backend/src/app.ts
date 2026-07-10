@@ -14,6 +14,8 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import authRoutes from '@routes/auth.routes';
+import { errorHandler } from '@middleware/error.middleware';
 
 export function createApp(): Express {
   const app = express();
@@ -43,9 +45,9 @@ export function createApp(): Express {
     res.status(200).json({ status: 'ok' });
   });
 
-  // --- Future routes will be mounted here -------------------------------
-  // app.use('/api/auth', authRoutes);
-  // app.use('/api/vehicles', vehicleRoutes);
+  // --- Feature routes -----------------------------------------------
+  app.use('/api/auth', authRoutes);
+  // app.use('/api/vehicles', vehicleRoutes); // added in the next session
 
   // --- 404 handler --------------------------------------------------
   // Must be registered AFTER all real routes -- Express matches routes in
@@ -53,6 +55,11 @@ export function createApp(): Express {
   app.use((_req: Request, res: Response) => {
     res.status(404).json({ error: 'Not Found' });
   });
+
+  // --- Centralized error handler -----------------------------------
+  // Must be registered LAST, and Express identifies it as an error handler
+  // specifically because it takes 4 arguments (err, req, res, next).
+  app.use(errorHandler);
 
   return app;
 }
