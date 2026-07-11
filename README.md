@@ -1,5 +1,7 @@
 # Car Dealership Inventory System
 
+**Repository:** https://github.com/jalshah11/car-dealership-inventory
+
 A full-stack inventory management system for a car dealership, built
 incrementally using Test-Driven Development (TDD). Built as a guided
 learning project to practice production-grade backend architecture,
@@ -18,6 +20,7 @@ authentication/authorization, and a typed React frontend.
 - [Environment Variables](#environment-variables)
 - [Running Tests](#running-tests)
 - [Test Report](#test-report)
+- [Screenshots](#screenshots)
 - [Deployment](#deployment)
 - [My AI Usage](#my-ai-usage)
 
@@ -289,6 +292,34 @@ different layer (real-DB integration tests for the backend repositories;
 page-level tests mocking the hooks for the frontend). The business-logic
 layers that actually contain decisions -- `services/`, `validators/`,
 `utils/`, `components/`, `context/` -- are at or near 100%.
+
+---
+
+## Screenshots
+
+**Login**
+
+![Login page](screenshots/01-login.png)
+
+**Register**
+
+![Register page](screenshots/02-register.png)
+
+**Dashboard — browse & search** (filtering by make, with an out-of-stock vehicle visibly marked "Sold out" in red)
+
+![Dashboard with search filters](screenshots/03-dashboard-search.png)
+
+**Vehicle detail — in stock**, Purchase button enabled
+
+![Vehicle detail, in stock](screenshots/04-vehicle-detail-purchase.png)
+
+**Vehicle detail — out of stock**, Purchase button disabled (per spec: "disabled if quantity is zero")
+
+![Vehicle detail, out of stock](screenshots/05-vehicle-detail-sold-out.png)
+
+**Admin dashboard** — full inventory table with Edit / Delete / Restock per row, "+ Add vehicle" — only visible/reachable when logged in as an `ADMIN`
+
+![Admin dashboard](screenshots/06-admin-dashboard.png)
 
 ---
 
