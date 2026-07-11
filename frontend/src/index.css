@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+/* Design tokens for the Car Dealership Inventory System.
+   Tailwind v4 reads custom properties declared in @theme and generates
+   matching utility classes automatically (e.g. --color-navy below becomes
+   usable as bg-navy, text-navy, border-navy, etc.) -- no tailwind.config.js
+   needed for this project's scope. */
+@theme {
+  /* Palette -- restrained, functional-dashboard first. Amber is the ONLY
+     saturated color, reserved for primary actions and active states, so it
+     actually reads as "this matters" rather than competing with itself. */
+  --color-navy: #13213b;
+  --color-navy-light: #1e3358;
+  --color-cream: #f7f6f2;
+  --color-ink: #1b1f27;
+  --color-ink-soft: #565d6b;
+  --color-amber: #c97a2b;
+  --color-amber-light: #e0a458;
+  --color-success: #3a7d5c;
+  --color-danger: #b23a3a;
+  --color-border: #e2ded4;
+
+  /* Type -- a geometric display face for headings, a neutral workhorse for
+     body/UI text, and a monospace face reserved for PRICES, quantities, and
+     spec-style data -- a deliberate nod to a dealership window sticker's
+     tabular figures, not just "code font because it's easy to reach for". */
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+/* Utility for the "window sticker" figures (price, quantity) used across
+   vehicle cards and detail pages -- tabular-nums keeps digits
+   fixed-width so a column of prices actually lines up, the way a real
+   spec sheet would. */
+.spec-figure {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
