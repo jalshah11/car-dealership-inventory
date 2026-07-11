@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthContext';
 import { MainLayout } from '@/layouts/MainLayout';
-import { AdminRoute } from '@/components/RouteGuards';
+import { AdminRoute, ProtectedRoute } from '@/components/RouteGuards';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { DashboardPage } from '@/pages/DashboardPage';
@@ -35,17 +35,18 @@ function App() {
           <Toaster position="top-right" />
           <Routes>
             <Route element={<MainLayout />}>
-              <Route index element={<DashboardPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/vehicles/:id" element={<VehicleDetailPage />} />
 
-              {/* Purchasing is gated inline on VehicleDetailPage (checks
-                  isAuthenticated directly) rather than behind a route --
-                  the page itself is public (anyone can VIEW a vehicle),
-                  only the purchase action requires login. ProtectedRoute
-                  (see components/RouteGuards.tsx) is available and tested
-                  for any future USER-only PAGE, e.g. "my purchase history". */}
+              {/* Browsing now requires login -- the kata spec groups
+                  GET /vehicles, /search, and /:id under "Vehicles
+                  (Protected)", so the backend rejects these without a
+                  valid token. The frontend mirrors that here rather than
+                  showing a dashboard that would just 401 on load. */}
+              <Route element={<ProtectedRoute />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="/vehicles/:id" element={<VehicleDetailPage />} />
+              </Route>
 
               <Route element={<AdminRoute />}>
                 <Route path="/admin" element={<AdminDashboardPage />} />
