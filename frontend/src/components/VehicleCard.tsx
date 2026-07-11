@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Vehicle } from '@/types/api';
+import type { Vehicle } from '@/types/api';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',

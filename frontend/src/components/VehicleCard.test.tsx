@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { VehicleCard } from './VehicleCard';
-import { Vehicle } from '@/types/api';
+import type { Vehicle } from '@/types/api';
 
 function makeVehicle(overrides: Partial<Vehicle> = {}): Vehicle {
   return {

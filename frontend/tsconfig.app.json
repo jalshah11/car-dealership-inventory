@@ -20,10 +20,12 @@
        makes '@/...' imports actually RESOLVE at bundle time; this makes
        the TypeScript language server (and tsc type-checking) understand
        them too. Two separate tools, two separate configs, same lesson we
-       already learned on the backend with tsconfig-paths. */
-    "baseUrl": ".",
+       already learned on the backend with tsconfig-paths.
+       (No separate baseUrl needed -- modern TypeScript resolves `paths`
+       relative to this config file's own location automatically; baseUrl
+       is deprecated as of TS 7.) */
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
 
     /* Linting */

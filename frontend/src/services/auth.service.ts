@@ -1,5 +1,5 @@
 import { apiClient } from './api-client';
-import { AuthResponse } from '@/types/api';
+import type { AuthResponse } from '@/types/api';
 
 export interface RegisterPayload {
   email: string;

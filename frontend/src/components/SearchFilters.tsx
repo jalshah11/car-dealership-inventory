@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { SearchFilters as SearchFiltersType } from '@/types/api';
+import type { SearchFilters as SearchFiltersType } from '@/types/api';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 

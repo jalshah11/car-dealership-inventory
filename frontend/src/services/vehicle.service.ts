@@ -1,5 +1,5 @@
 import { apiClient } from './api-client';
-import { CreateVehicleInput, SearchFilters, UpdateVehicleInput, Vehicle } from '@/types/api';
+import type { CreateVehicleInput, SearchFilters, UpdateVehicleInput, Vehicle } from '@/types/api';
 
 export async function listVehicles(): Promise<Vehicle[]> {
   const { data } = await apiClient.get<Vehicle[]>('/vehicles');

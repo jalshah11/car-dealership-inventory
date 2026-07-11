@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiErrorResponse } from '@/types/api';
+import type { ApiErrorResponse } from '@/types/api';
 
 // Centralizes "what do I actually show the user when a request fails" --
 // without this, every form/component would need to know the shape of our

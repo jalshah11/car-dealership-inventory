@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import { VehicleDetailPage } from './VehicleDetailPage';
 import { useVehicleQuery, usePurchaseVehicleMutation } from '@/hooks/useVehicles';
 import { useAuth } from '@/hooks/useAuth';

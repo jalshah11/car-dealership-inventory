@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SearchFilters as SearchFiltersType } from '@/types/api';
+import type { SearchFilters as SearchFiltersType } from '@/types/api';
 import { useVehiclesQuery } from '@/hooks/useVehicles';
 import { SearchFilters } from '@/components/SearchFilters';
 import { VehicleCard } from '@/components/VehicleCard';

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as vehicleService from '@/services/vehicle.service';
-import { CreateVehicleInput, SearchFilters, UpdateVehicleInput } from '@/types/api';
+import type { CreateVehicleInput, SearchFilters, UpdateVehicleInput } from '@/types/api';
 
 // A shared query key prefix -- every vehicle-related query is invalidated
 // together after a mutation (create/update/delete/purchase/restock), so the
