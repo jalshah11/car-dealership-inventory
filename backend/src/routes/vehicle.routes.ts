@@ -1,5 +1,12 @@
 // Vehicle routes.
 //
+// AUTHORIZATION MODEL: matches the kata spec's "Vehicles (Protected)"
+// section literally -- every route below requires a logged-in user
+// (authenticate). Only DELETE and restock are additionally gated to
+// ADMIN (authorize(Role.ADMIN)), exactly as the spec calls out
+// "(Admin only)" for those two and only those two. Browsing, search,
+// create, and update are open to any authenticated user.
+//
 // ORDERING MATTERS: Express matches routes top-to-bottom, first match
 // wins. GET /search MUST be registered before GET /:id -- otherwise a
 // request to /api/vehicles/search would match the /:id route FIRST, with
@@ -24,31 +31,32 @@ import {
 const router = Router();
 const vehicleController = new VehicleController();
 
-// --- Public browsing routes ------------------------------------------
+// --- Browsing (any authenticated user) ---------------------------------
 // GET /search BEFORE GET /:id -- see note above.
 router.get(
   '/search',
+  authenticate,
   validateQuery(searchVehicleSchema),
   asyncHandler(vehicleController.search.bind(vehicleController)),
 );
-router.get('/', asyncHandler(vehicleController.list.bind(vehicleController)));
-router.get('/:id', asyncHandler(vehicleController.getById.bind(vehicleController)));
+router.get('/', authenticate, asyncHandler(vehicleController.list.bind(vehicleController)));
+router.get('/:id', authenticate, asyncHandler(vehicleController.getById.bind(vehicleController)));
 
-// --- Admin-only inventory management -----------------------------------
+// --- Create/update (any authenticated user, per spec) -------------------
 router.post(
   '/',
   authenticate,
-  authorize(Role.ADMIN),
   validateBody(createVehicleSchema),
   asyncHandler(vehicleController.create.bind(vehicleController)),
 );
 router.put(
   '/:id',
   authenticate,
-  authorize(Role.ADMIN),
   validateBody(updateVehicleSchema),
   asyncHandler(vehicleController.update.bind(vehicleController)),
 );
+
+// --- Delete: ADMIN only, per spec ---------------------------------------
 router.delete(
   '/:id',
   authenticate,
@@ -57,7 +65,7 @@ router.delete(
 );
 
 // --- Inventory transactions ----------------------------------------
-// Purchase: any AUTHENTICATED user (you need an identity to buy something,
+// Purchase: any authenticated user (you need an identity to buy something,
 // but admin rights aren't required -- that's the whole customer base).
 router.post(
   '/:id/purchase',
